@@ -1,0 +1,27 @@
+---
+title: "Scrape"
+author:   Peter Yang  pjyang4@wisc.edu
+          WonHee Kim  wkim97@wisc.edu
+          Weijia Ding wding33@wisc.edu
+          Sirui Yi    syi26@wisc.edu
+          Kenny Jin jjin59@wisc.edu
+          Dingyi Li   dli283@wisc.edu
+          Jing Huang  jhuang339@wisc.edu
+          Yuanhang Wang  wang2243@wisc.edu
+date: "November 6, 2018"
+output: html_document
+---
+```{r}
+line = readLines("https://www.metacritic.com/browse/games/score/metascore/all/pc?sort=desc:")
+game_lines <- grep(pattern = "\\s<a href=\"/game/pc/(.*)\">", x = line, value = T)
+game_links <- gsub(pattern = ".*<a href=\"/game/pc/(.*)\">", replacement = "\\1", x =  game_lines)
+game_scores <- grep(pattern = "\\s<span class=\"data textscore textscore_(.*)\">(.*)", x = line, value = T)
+game_links <- game_links[1:100]
+game_scores <- game_scores[1:100]
+game_score <- gsub(pattern = ".*<span class=\"data textscore textscore_(.*)\">(.*)</span>", replacement = "\\2", x = game_scores)
+game_date <- grep(pattern = "span class=\"data\">(.*)", x = line, value = T)
+game_dates <- gsub(pattern = ".*<span class=\"data\">(.*)</span>", replacement = "\\1", x = game_date)
+game_dates <- game_dates[1:100]
+game <- data.frame(dates = game_dates, score = game_score, game = game_links)
+```
+
